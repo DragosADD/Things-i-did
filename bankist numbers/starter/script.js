@@ -592,5 +592,7 @@ setInterval(function () {
 }, 1000);
 */
 
-///////////////////////////////////////////////////////////
-/////////////////IUmplementing a countdown timer
+//For testing
+
+console.log(`In order to log in use js and password 1111`);
+console.log(`Second account is jd and password 2222`);

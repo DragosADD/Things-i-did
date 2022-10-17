@@ -3,6 +3,18 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
 
+  //How to write documentation:
+  /**
+   * Render the received object to the DOM
+   * @param {Object | Object[]} data The data to be rendered (e.x recipe)
+   * @param {boolean} [render = true] If false created create markup string instead of rendering to the dom
+   * @returns {undefined | string} A markup is returned if render is false
+   * @this {Object} View instance
+   * @author Dediu Dragos
+   * @todo Finnish implementation
+   */
+  // optional is put in []
+
   render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();

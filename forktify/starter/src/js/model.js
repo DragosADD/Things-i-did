@@ -162,3 +162,15 @@ export const uploadRecipe = async function (newRecipe) {
     throw err;
   }
 };
+
+//Things to add
+
+//1) Display the number of pages between pagination(how many pages are);
+//2)Sort search results by duration or number of ingredients;
+//3) Perform ingredient validation in view, before submiting the form;
+//4)Perform ingredient validation in view, before submitting the form;
+//5) Improve recipe ingredient input: separate in multiple fields and allow more than 6 ingredients;
+
+//6) Shopping list feature : button on recipe to add ingreddients to a list;
+//7) Weekly meal planing feature: assign recipes to the next 7 days and show on a weekly calendar;
+//8) Get nutrition data on each ingredient from spponacular API (https://spoonacular.com/food-api) and calculate total calories of recipe

@@ -42,8 +42,7 @@ export default class View {
         !newEl.isEqualNode(curEl) &&
         newEl.firstChild?.nodeValue.trim() !== ``
       ) {
-        //as the name implies this checks to see if the nodes are the same or not, this is very complicated to understand
-        //but only the value needs to be verified, the elements ofcourse will be different
+        //as the name implies this checks to see if the nodes are the same or not,the value needs to be verified, the elements ofcourse will be different
         //also first child actually returns the first node and node Value gives the text of it if there is one, this only allows  to change only the text
         curEl.textContent = newEl.textContent; //this still applies as you are actually changing the text, before it was equaling everything
       }

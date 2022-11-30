@@ -29,6 +29,23 @@
   }
 }
 
+.pagination1 {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.active {
+  background-color: #f48982;
+  // background-color: $color-grey-dark-2;
+  color: white;
+}
+
 .copyright {
   color: $color-grey-dark-2;
   font-size: 1.2rem;
@@ -39,4 +56,8 @@
   .twitter-link:visited {
     color: $color-grey-dark-2;
   }
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
 }

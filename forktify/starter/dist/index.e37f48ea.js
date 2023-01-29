@@ -603,7 +603,7 @@ const controlPagination = function(goToPage) {
     // resultsView.render(model.getSearchResultPage(goToPage));
     //4) Render NEW initial pagination buttons
     // paginationView.render(model.state.search);
-    (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultPage(goToPage));
+    (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultPage(goToPage));
 };
 const controlServings = function(newServings) {
     //Update the recipe servings (in state)
@@ -3347,6 +3347,23 @@ class PaginationView extends (0, _viewJsDefault.default) {
     //     <use href="${icons}#icon-arrow-right"></use>
     //   </svg>
     // </button>`;
+    }
+    update(data) {
+        // the prupose of this method is to redo only the text , not render every element again
+        this._data = data;
+        const newMarkup = this._generateMarkup();
+        const newDom = document.createRange().createContextualFragment(newMarkup);
+        const newElements = Array.from(newDom.querySelectorAll(`*`)); //here are selected the new elements that were supposed to be rendered but now it will be different
+        const curElements = Array.from(this._parentElement.querySelectorAll(`*`)); // here are selected the current elemtns which have not yet been update
+        newElements.forEach((newEl, i)=>{
+            const curEl = curElements[i];
+            //0)Update text
+            if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== ``) //as the name implies this checks to see if the nodes are the same or not,the value needs to be verified, the elements ofcourse will be different
+            //also first child actually returns the first node and node Value gives the text of it if there is one, this only allows  to change only the text
+            curEl.textContent = newEl.textContent; //this still applies as you are actually changing the text, before it was equaling everything
+            //1)Update changed attribute
+            if (!newEl.isEqualNode(curEl)) Array.from(newEl.attributes).forEach((attr)=>curEl.setAttribute(attr.name, attr.value));
+        });
     }
     _generateMarkup() {
         const curPage = this._data.page;

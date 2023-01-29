@@ -600,9 +600,10 @@ const controllSearchResults = async function() {
 const controlPagination = function(goToPage) {
     // 3)Render New Results
     // resultsView.render(model.state.search.results);
+    // resultsView.render(model.getSearchResultPage(goToPage));
+    //4) Render NEW initial pagination buttons
+    // paginationView.render(model.state.search);
     (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultPage(goToPage));
-//4) Render NEW initial pagination buttons
-// paginationView.render(model.state.search);
 };
 const controlServings = function(newServings) {
     //Update the recipe servings (in state)
@@ -3297,36 +3298,47 @@ class PaginationView extends (0, _viewJsDefault.default) {
             pages.forEach((el)=>{
                 if (el.classList.contains(`active`)) el.classList.remove(`active`);
             });
-            if (btn.id === `first`) btn.nextElementSibling.classList.add(`active`);
-            if (btn.id === `last`) btn.previousElementSibling.classList.add(`.active`);
-            btn.classList.add(`active`);
+            if (btn.id === `first`) btn.nextElementSibling.nextElementSibling.classList.add(`active`);
+            else if (btn.id === `last`) btn.previousElementSibling.previousElementSibling.classList.add(`active`);
+            else btn.classList.add(`active`);
             const goToPage = Number(btn.dataset.goto);
             handler(goToPage);
         });
     }
     _displayPaginationNum(pages) {
         const result = [];
-        for(let i = 0; i < pages; i++)result.push(`<a class = "btn--inline" data-goto=${i + 1} href="#">${i + 1}</a>`);
+        let done = true;
+        if (pages < 5) for(let i = 0; i < pages; i++)this._tempFunction(result);
+        else for(let i1 = 0; i1 < pages; i1++){
+            if (i1 > 2 && i1 < pages - 2) {
+                if (done) {
+                    result.push(`<a>...</a>`);
+                    done = false;
+                }
+            } else result.push(`<a class = "btn--inline" data-goto=${i1 + 1} href="#">${i1 + 1}</a>`);
+        }
         return result;
     }
     _buttonNextOrPrev(curPage, defaultVal = 1) {
         const numberOfPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
-        // if (defaultVal === 0) {
-        //   return `
-        //   <button data-goto=${
-        //     curPage - 1
-        //   } class="btn--inline pagination__btn--prev">
-        //     <svg class="search__icon">
-        //         <use href="${icons}#icon-arrow-left"></use>
-        //     </svg>
-        //     <span>Page ${curPage - 1}</span>
-        //    </button>`;
-        // }
         return `<div class="pagination1">
-            <a class = "btn--inline" data-goto=${1} id='first' href="#">&laquo;</a>
-            ${this._displayPaginationNum(numberOfPages).join(``)}
-            <a class = btn--inline data-goto=${numberOfPages} id = 'last' href="#">&raquo;</a>
-        </div>`;
+              <a class = "btn--inline" data-goto=${1} id='first' href="#">&Lang;</a>
+              <a class = "btn--inline" data-goto=${2} id='first' href="#">&langle;</a>
+              ${this._displayPaginationNum(10).join(``)}
+              <a class = "btn--inline" data-goto=${2} id='first' href="#">&rangle;</a>
+              <a class = btn--inline data-goto=${numberOfPages} id = 'last' href="#">&Rang;</a>
+          </div>`;
+    // if (defaultVal === 0) {-------------------------legacy
+    //   return `
+    //   <button data-goto=${
+    //     curPage - 1
+    //   } class="btn--inline pagination__btn--prev">
+    //     <svg class="search__icon">
+    //         <use href="${icons}#icon-arrow-left"></use>
+    //     </svg>
+    //     <span>Page ${curPage - 1}</span>
+    //    </button>`;
+    // }
     //   return `<button data-goto=${
     //     curPage + 1
     //   }  class="btn--inline pagination__btn--next">
@@ -3339,7 +3351,6 @@ class PaginationView extends (0, _viewJsDefault.default) {
     _generateMarkup() {
         const curPage = this._data.page;
         const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
-        // //Page 1 and there are other pages
         if (curPage === 1 && numPages > 1 || curPage <= numPages) return this._buttonNextOrPrev(curPage);
         // //last page
         // if (curPage === numPages && numPages > 1) {

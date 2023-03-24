@@ -10,6 +10,8 @@ export const state = {
     results: '',
     page: 1,
     resultsPerPage: RES_PRE_PAGE,
+    resultsByTime: '',
+    resultsByIngredients: '',
   },
   bookmarks: [],
 };
@@ -29,15 +31,50 @@ const createRecipeObj = function (data) {
   };
 };
 
+const checkAddIngredientsAndDuration = async function (el) {
+  try {
+    const objectOfPromise = await AJAX(`${API_URL}${el.id}?key=${KEY}`);
+    el.duration = objectOfPromise.data.recipe.cooking_time;
+    el.ingredients = objectOfPromise.data.recipe.ingredients.length;
+  } catch (err) {
+    `has something to do with the el bro`;
+  }
+};
+
+const logicOfSort = async function (stateOfSearchRes, sortByWhat) {
+  for (let i = 1; i < stateOfSearchRes.length; i++) {
+    await checkAddIngredientsAndDuration(stateOfSearchRes[i]);
+    console.log(stateOfSearchRes[i]);
+    console.log(stateOfSearchRes[i].duration);
+  }
+
+  if (sortByWhat === `Ingredients`)
+    stateOfSearchRes.sort((a, b) => a.ingredients - b.ingredients);
+
+  if (sortByWhat === `Duration`)
+    stateOfSearchRes.sort((a, b) => a.duration - b.duration);
+
+  console.log(stateOfSearchRes);
+  // console.log(stateOfSearchRes);
+};
+
+// const checkArray = async function(searchResults){
+//   searchResults.forEach(el=>{
+//     const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
+//   })
+// }
+
 export const loadRecipe = async function (id) {
+  //In order to sort by ingredients or duration  and due to the fact that the api is not good
+  //I have to make multiple api calls in order to get each property
   try {
     const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
-
+    // console.log(data);
     state.recipe = createRecipeObj(data);
-
     state.bookmarks.forEach(bm => {
       if (bm.id === state.recipe.id) state.recipe.bookmarked = bm.bookmarked;
     }); // different from tutorial aswell, check out the turial if you re bored but again it feels like he forgot that the data is here.
+    // console.log(state.search.results);
   } catch (err) {
     console.error(`${err} ATENTIE!!`);
     throw err;
@@ -59,6 +96,9 @@ export const loadSearchResults = async function (query) {
       };
     });
     state.search.page = 1;
+
+    // console.log(state.search.results);
+    await logicOfSort(state.search.results, `Ingredients`);
   } catch (err) {
     console.error(`${err} ATENTIE!!`);
     throw err;
@@ -99,7 +139,7 @@ export const addBookmark = function () {
     state.recipe.bookmarked = false;
     state.bookmarks.map((bkm, i) => {
       if (bkm.id === state.recipe.id) state.bookmarks.splice(i, 1); // kill the one that is marked as false, this way te order of the old ones doesnt change
-      console.log(state.bookmarks);
+      // console.log(state.bookmarks);
     });
     persistBookmark();
   }
@@ -165,7 +205,7 @@ export const uploadRecipe = async function (newRecipe) {
 
 //Things to add
 
-//1) Display the number of pages between pagination(how many pages are);
+//1) Display the number of pages between pagination(how many pages are); / done + changable dots
 //2)Sort search results by duration or number of ingredients;
 //3) Perform ingredient validation in view, before submiting the form;
 //4)Perform ingredient validation in view, before submitting the form;

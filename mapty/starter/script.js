@@ -466,29 +466,29 @@ class App {
     if (!data) return;
     const removableItems = document.querySelectorAll(`.workout`);
     removableItems.forEach(el => el.remove());
-    const auschwitz = [];
+    const arr = [];
     data.forEach(function (el) {
       if (el.type === `running`) {
-        const jew = new Running(
+        const thing = new Running(
           el.coords,
           el.distance,
           el.duration,
           el.cadence
         );
-        jew.id = el.id;
-        auschwitz.push(jew);
+        thing.id = el.id;
+        arr.push(thing);
       } else if (el.type === `cycling`) {
-        const jew = new Cycling(
+        const thing = new Cycling(
           el.coords,
           el.distance,
           el.duration,
           el.elevationGain
         );
-        jew.id = el.id;
-        auschwitz.push(jew);
+        thing.id = el.id;
+        arr.push(thing);
       }
     });
-    this.#workout = auschwitz;
+    this.#workout = arr;
 
     if (e) {
       if (e.target.id === `crescator`) {
